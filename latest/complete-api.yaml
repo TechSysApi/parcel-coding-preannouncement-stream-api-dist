@@ -5,14 +5,24 @@ info:
   contact:
     name: 'Swiss Post Coding System Development'
     email: erkennen.codieren.pakete@post.ch
-  version: 4.1.0-feature-refactoring.2
+  version: 4.1.0-feature-refactoring.3
 host: 'server:8080'
 basePath: Kafka
 paths:
-  logistics.parcel.coding.preannouncement.Mailpiece-event:
+  logistics.parcel.coding.preannouncement.Mailpiece.v2-event:
     get:
       summary: 'Kafka topic for sending preannouncement coding data'
-      description: 'All the related coding data of a specific preannouncement validation workflow'
+      description: 'All the related coding data of a specific preannouncement validation workflow (mainly internal usage for PrimeVision)'
+      tags:
+        - logistics.parcel.coding.preannouncement
+      responses:
+        '200':
+          description: 'The event which occured'
+          schema: {type: array, $ref: 'PreannouncementCodingEvent'}
+  logistics.parcel.coding.preannouncement.enriched.Mailpiece.v2-event:
+    get:
+      summary: 'Kafka topic for sending preannouncement coding data'
+      description: 'All the related coding data of a specific preannouncement validation workflow (public - including further enrichment with masterdata)'
       tags:
         - logistics.parcel.coding.preannouncement
       responses:
