@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Coding System Development'
     email: erkennen.codieren.pakete@post.ch
-  version: 4.1.0-feature-refactoring.1
+  version: 4.1.0-feature-refactoring.2
 host: 'server:8080'
 basePath: Kafka
 paths:
@@ -75,17 +75,12 @@ definitions:
         items:
           type: string
         description: 'Contains product codes that have been transmitted as products by the customer but are not Swiss Post products'
-      sourceSystem:
-        $ref: 'SourceSystem'
-        description: 'The system which publishes the event'
       timestampBegin:
         $ref: 'DateTime'
         description: 'Start time of the coding workflow'
       timestampEnd:
         $ref: 'DateTime'
         description: 'End time of the coding workflow'
-    required:
-      - sourceSystem
     additionalProperties: false
     description: 'Information captured by the coding systems during coding'
   DeliveryPointState:
@@ -93,7 +88,7 @@ definitions:
     enum:
       - APPROVED
       - IN_SERVICE
-    description: "APPROVED    Planned and confimed but not valid yed\nIN_SERVICE   In service and valid"
+    description: "APPROVED    Planned and confimed but not valid yet\nIN_SERVICE   In service and valid"
   DeliveryPointType:
     type: string
     enum:
@@ -319,6 +314,9 @@ definitions:
       personAddressKey:
         $ref: 'KeyWithConfidence'
         description: 'Identifies a person at a domiclie address (AMP-Key)'
+    required:
+      - personType
+      - personAddressKey
     additionalProperties: false
     description: 'Information related to the person of an address'
   PersonalizedAddressState:
@@ -349,11 +347,19 @@ definitions:
       codingResult:
         $ref: 'CodingResult'
         description: "Data captured during a workflow in the coding system\nThis may contain aggregated data from multiple enrichment steps"
+      valid:
+        type: boolean
+        description: "DEPRECATED: In future use the related keys to check if valid (personAddressKey or houseKey)\ntrue: The delivered preannouncement raw data is correct\nfalse: The Data is not correct (bad data delivery)"
+      corrected:
+        type: boolean
+        description: "DEPRECATED: In future use the applied coding rules for the related key to check if a coding rule is used to deliver the key\ntrue: corrections were applied to provide the validated coding result\nfalse: no correction needed to provide result or not valid at all"
     required:
       - eventId
       - senderId
       - timestamp
       - codingResult
+      - valid
+      - corrected
     additionalProperties: false
     description: 'Coding event'
   Product:
@@ -369,21 +375,3 @@ definitions:
       - code
     additionalProperties: false
     description: 'Identified and validated product (old PRZL, "Zusatzleistung")'
-  SourceSystem:
-    type: object
-    properties:
-      systemName:
-        type: string
-        description: 'Device which provided the information'
-      instance:
-        type: string
-        description: 'Instance of the device'
-      locationKey:
-        type: string
-        description: 'Unique identifier of the sorting center (ONRP).'
-        maxLength: 200
-    required:
-      - systemName
-      - instance
-      - locationKey
-    additionalProperties: false
