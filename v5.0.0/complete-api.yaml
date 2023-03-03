@@ -1,0 +1,388 @@
+swagger: '2.0'
+info:
+  title: 'Parcel Coding Preannouncement Stream API'
+  description: 'API for preannouncement coding data'
+  contact:
+    name: 'Swiss Post Coding System Development'
+    email: erkennen.codieren.pakete@post.ch
+  version: 5.0.0
+host: 'server:8080'
+basePath: Kafka
+paths:
+  logistics.parcel.coding.preannouncement.Mailpiece.v2-event:
+    get:
+      summary: 'Kafka topic for sending preannouncement coding data'
+      description: 'All the related coding data of a specific preannouncement validation workflow (mainly internal usage for PrimeVision)'
+      tags:
+        - logistics.parcel.coding.preannouncement
+      responses:
+        '200':
+          description: 'The event which occured'
+          schema: {type: array, $ref: 'PreannouncementCodingEvent'}
+  logistics.parcel.coding.preannouncement.enriched.Mailpiece.v2-event:
+    get:
+      summary: 'Kafka topic for sending preannouncement coding data'
+      description: 'All the related coding data of a specific preannouncement validation workflow (public - including further enrichment with masterdata)'
+      tags:
+        - logistics.parcel.coding.preannouncement
+      responses:
+        '200':
+          description: 'The event which occured'
+          schema: {type: array, $ref: 'PreannouncementCodingEvent'}
+definitions:
+  Int:
+    type: integer
+    description: '<a href="https://swagger.io/docs/specification/data-models/data-types/#numbers">Number @asType integer</a>'
+  Address:
+    type: object
+    properties:
+      person:
+        $ref: 'Person'
+        description: 'Information regarding a person'
+      additionalAddressLine1:
+        type: string
+        description: "Personalized and additional address information (e.g.c/o-Adresse)\n(AMPplus: Adresszusatz 1)"
+        maxLength: 65
+      additionalAddressLine2:
+        type: string
+        description: "Unpersonalized and not official information (e.g. Chalet Alpenblick)\n(AMPplus: Adresszusatz 2)"
+        maxLength: 65
+      locality:
+        $ref: 'Locality'
+        description: 'Locality of an address'
+      deliveryPoint:
+        $ref: 'DeliveryPoint'
+        description: 'Delivery point of an address'
+      addressLines:
+        type: array
+        items:
+          type: string
+        description: 'Address lines (raw, unvalidated address data submitted by the customer)'
+      state:
+        $ref: 'PersonalizedAddressState'
+        description: 'Indicates state of a validated person living at a specific address'
+    additionalProperties: false
+    description: 'Address captured by an enrichment device or delivered by a preannouncement system'
+  DateTime:
+    type: string
+    description: "<a href=\"https://swagger.io/docs/specification/data-models/data-types/#string\">String @format date-time</a>,\nas defined by <a href=\"https://tools.ietf.org/html/rfc3339#section-5.6\">RFC 3339, section 5.6</a>,\nfor example: <code>2014-05-22T10:42:42.542+00:00</code>."
+    format: date-time
+  CodingResult:
+    type: object
+    properties:
+      addresses:
+        type: array
+        items:
+          $ref: 'Address'
+        description: 'Contains information regarding the recipient addresses transfered by a preannouncement system'
+      products:
+        type: array
+        items:
+          $ref: 'Product'
+        description: 'Contains validated products transfered by a preannouncement system'
+      invalidProductCodes:
+        type: array
+        items:
+          type: string
+        description: 'Contains product codes that have been transmitted as products by the customer but are not Swiss Post products'
+      timestampBegin:
+        $ref: 'DateTime'
+        description: 'Start time of the coding workflow'
+      timestampEnd:
+        $ref: 'DateTime'
+        description: 'End time of the coding workflow'
+    additionalProperties: false
+    description: 'Information captured by the coding systems during coding'
+  DeliveryPointState:
+    type: string
+    enum:
+      - APPROVED
+      - IN_SERVICE
+    description: "APPROVED    Planned and confimed but not valid yet\nIN_SERVICE   In service and valid"
+  DeliveryPointType:
+    type: string
+    enum:
+      - DOMICILE
+      - PICKPOST
+      - PARCEL_TERMINAL
+      - POBOX
+      - POSTE_RESTANTE
+      - COMPANY_POSTCODE
+      - INTERNATIONAL
+      - MILITARY
+      - INTERNAL_POSTCODE
+    description: "DOMICILE = Domiziladresse\nPICK_POST = Pickpost\nPARCEL_TERMINAL = myPost24\nPOBOX = Post Office Box (Postfach)\nPOSTE_RESTANTE = Retain at swiss post (Postlagernd)\nCOMPANY_POSTCODE = Company Postcode indicates (FirmenPLZ)\nINTERNATIONAL = International address (Export)\nMILITARY = Military address\nINTERNAL_POSTCODE = Swiss post internal postcode"
+  DeliveryPoint:
+    type: object
+    properties:
+      houseNumber:
+        $ref: 'Int'
+        description: 'House number of an address (e.g. Musterstrasse ->14<-)'
+      houseNumberExtension:
+        type: string
+        description: 'House number extension of an address (e.g. Musterstrasse 14 ->a<-)'
+        maxLength: 6
+      houseKey:
+        $ref: 'KeyWithConfidence'
+        description: 'Identifies the address physically located on the mailpiece (e.g. domicile, poBox, pickPost, parcel terminal / myPost 24 or other service address)'
+      mailBoxKey:
+        $ref: 'KeyWithConfidence'
+        description: 'Identifies the mailbox physically located on the mailpiece (HBK ID)'
+      addressedObjectIdentifier:
+        type: string
+        description: "Identifier for special address elements (e.g. floor door- or appartementnumber)\n(AMPplus: Stockwerk / Tür- oder Wohnungsnummer)"
+        maxLength: 10
+      militaryKey:
+        $ref: 'KeyWithConfidence'
+        description: 'MLZ physically located on the mailpiece (read by the coding system)'
+      deliveryPointType:
+        $ref: 'DeliveryPointType'
+        description: 'Type of a delivery point'
+      poBoxNumber:
+        type: string
+        description: "Post Box Number which is located in an address\n(AMPplus: Postfachnummer)"
+        maxLength: 10
+      customerNumber:
+        type: string
+        description: 'Customernumber (pickPost- or parcel terminal / myPost24 number)'
+        maxLength: 8
+      state:
+        $ref: 'DeliveryPointState'
+        description: 'Indicates state of a validated delivery point'
+    additionalProperties: false
+    description: 'Information related to the delivery point of a recipient'
+  IdentifierTags:
+    type: object
+    properties:
+      nationalMailpieceIds:
+        type: array
+        items:
+          type: string
+        description: "Contains the list of national identifiers to track a mail item within the country.\nThe id is printed on the mailpiece by the sender."
+      internationalMailpieceIds:
+        type: array
+        items:
+          type: string
+        description: "Contains the list of international identifiers to track a mail item internationally.\nThe id is printed on the mailpiece by the sender."
+      preannouncementUid:
+        type: string
+        description: 'Unique item id assigned by DT / DXS'
+        maxLength: 100
+    additionalProperties: false
+    description: 'Contains a list of logistic or technical identifiers to track a mail item within a specific context.'
+  KeyWithConfidence:
+    type: object
+    properties:
+      key:
+        type: string
+        description: 'Value of a key'
+      confidence:
+        $ref: 'Int'
+        description: 'Confidence of a key (based on validation with masterdata and coding rules)'
+      reasons:
+        type: array
+        items:
+          type: string
+        description: 'Reasons which indicate why the confidence has its value'
+      appliedCodingRules:
+        type: array
+        items:
+          type: string
+        description: 'Coding rules which were applied to resolve a specific key'
+    required:
+      - key
+      - confidence
+    additionalProperties: false
+    description: 'Key with confidence base on validation'
+  LegalForm:
+    type: string
+    enum:
+      - INVIVIDUAL
+      - SIMPLE_PARTNERSHIP
+      - GENERAL_PARTNERSHIP
+      - LIMETED_PARTNERSHIP
+      - PARTNERSHIP_LIMETED_BY_SHARES
+      - AG_LTD_PUBLIC_LIMETED_COMPANY
+      - GMBH_SARL_PRIVATE_LIMETED_COMPANY
+      - COOPERATIVE
+      - ASSOCIATION
+      - FOUNDATION
+      - BRANCH_OF_FOREIGN_AG_LTD
+      - BRANCH_OF_FOREIGN_SARL
+      - FEDERAL_ADMINISTRATION
+      - CANTONAL_ADMINISTRATION
+      - DISTRICT_ADMINISTRATION
+      - MUNICIPAL_ADMINISTRATION
+      - PUBLIC_ENTITY_ADMINISTRATION
+      - STATE_RECOGNIZED_CHURCH
+      - FOREIGN_LEGAL_FORM_BRANCH
+      - FOREIGN_COUNTRY_EMBASSY
+      - INERNATIONAL_ORGANISZATION
+      - FEDERAL_WORKS
+      - CANTONAL_WORKS
+      - DISTRICT_WORKS
+      - MUNICIPAL_WORKS
+      - PUBLIC_ENTITY_WORKS
+      - POSTAL_ORGANISATIONAL_UNITS
+      - SUBSIDIARIES
+    description: "Rechtsform, wird nur bei Geschäftspersonen abgefüllt\nINVIVIDUAL = Einzelfirma\nSIMPLE_PARTNERSHIP = Einfache Gesellschaft\nGENERAL_PARTNERSHIP = Kollektivgesellschaft\nLIMETED_PARTNERSHIP = Kommanditgesellschaft\nPARTNERSHIP_LIMETED_BY_SHARES = Kommanditaktiengesellschaft\nAG_LTD_PUBLIC_LIMETED_COMPANY = Aktiengesellschaft/LTD\nGMBH_SARL_PRIVATE_LIMETED_COMPANY = GMBH/SARL\nCOOPERATIVE = Genossenschaft\nASSOCIATION = Verein\nFOUNDATION = Stiftung\nBRANCH_OF_FOREIGN_AG_LTD =\nBRANCH_OF_FOREIGN_SARL = Ausländische GMBH-Filiale;SARL\nFEDERAL_ADMINISTRATION = Verwaltung des Bundes\nCANTONAL_ADMINISTRATION = Verwaltung des Kantons\nDISTRICT_ADMINISTRATION = Verwaltung des Bezirks\nMUNICIPAL_ADMINISTRATION = Verwaltung der Gemeinde\nPUBLIC_ENTITY_ADMINISTRATION = öffentliche Körperschaft (Verw.)\nSTATE_RECOGNIZED_CHURCH = Staatlich anerkannte Kirche\nFOREIGN_LEGAL_FORM_BRANCH = Ausländische Rechtsform (Filiale)\nFOREIGN_COUNTRY_EMBASSY = Ausländischer Staat (Botschaft)\nINERNATIONAL_ORGANISZATION = Internationale Organisation\nFEDERAL_WORKS = Betriebe des Bundes\nCANTONAL_WORKS = Betriebe des Kantons\nDISTRICT_WORKS = Betriebe des Bezirks\nMUNICIPAL_WORKS = Betriebe der Gemeinde\nPUBLIC_ENTITY_WORKS = öffentliche Körperschaft (Betriebe)\nPOSTAL_ORGANISATIONAL_UNITS = Organisaitonseinheit der Post\nSUBSIDIARIES = Konzerngesellschaft der Post"
+  Locality:
+    type: object
+    properties:
+      streetName:
+        type: string
+        description: "Name of the streed (e.g. Musterstrasse)\n(AMPplus: Strassenbezeichnung)"
+        maxLength: 60
+      streetKey:
+        $ref: 'KeyWithConfidence'
+        description: 'Identifies the street physically located on the mailpiece (street key in AMPplus)'
+      city:
+        type: string
+        description: "City\n(AMPplus: Ort)"
+        maxLength: 60
+      addressPostcode4:
+        type: string
+        description: "4 digit postcode\n(AMPplus: Postleitzahl)"
+        maxLength: 4
+      addressPostcodeExtension:
+        type: string
+        description: "Additional information related to a city\nmultiple purposes, see examples:\n56, 57 = Zoll, Import/Export\n60 = Briefzustellung\n61 = Postfach\n70 = Paketzustellung\n72 = Expresszustellung\n74 = Postautodienst\n75 = Kaserne"
+        maxLength: 2
+      postCodeKey:
+        $ref: 'KeyWithConfidence'
+        description: 'Identifies the postcode physically located on the mailpiece (Ordnungsnummer Post (ONRP), Fremdschlüssel zu ASDP)'
+      communityKey:
+        $ref: 'KeyWithConfidence'
+        description: 'Identifies the community physically located on the mailpiece (BFS-Nr Gemeinde, Fremdschlüssel zu ASDP)'
+      countryCode:
+        type: string
+        description: 'ISO-Code of the country (2-digit)'
+        maxLength: 2
+      countryKey:
+        $ref: 'KeyWithConfidence'
+        description: 'Identifies the country physically located on the mailpiece (ID in the country-table in MDS)'
+    additionalProperties: false
+    description: 'Information related to the locality of an address'
+  PersonState:
+    type: string
+    enum:
+      - ACTIVE
+      - DECEASED_EXPIRED
+      - RELOCATED
+      - PROVISIONAL
+    description: "ACTIVE   The person is active and in service\nDECEASED_EXPIRED THE person is dead or the company is extinct\nRELOCATED    The person moved away without giving the new address\nPROVISIONAL  provisional entity"
+  PersonType:
+    type: string
+    enum:
+      - PRIVATE
+      - BUSINESS
+    description: "person type\nPRIVATE = Privatperson\nBUSINESS = Geschäftsperson"
+  Person:
+    type: object
+    properties:
+      salutation:
+        type: string
+        description: "Element that uses a word, groups of words, acronyms, or abbreviations to indicate the person's or group's marital status or addressee type (e.g. Herr / Frau).\n(AMPplus: Anrede)"
+        maxLength: 80
+      title:
+        type: string
+        description: 'Title of an addressee'
+        maxLength: 30
+      firstName:
+        type: string
+        description: "Firstnames of an addressee\n(AMPplus: Vorname)"
+        maxLength: 75
+      lastName:
+        type: string
+        description: "Lastname of an addressee\n(AMPplus: Name)"
+        maxLength: 80
+      suffix:
+        type: string
+        description: 'Suffix of the name (e.g. Junior, Senior)'
+        maxLength: 30
+      personType:
+        $ref: 'PersonType'
+        description: 'Indicates if the person is a company or person'
+      organizationName:
+        type: string
+        description: 'Name of an organization (AMPplus: Name der Firma)'
+        maxLength: 200
+      organizationNameAddOn1:
+        type: string
+        description: 'Addon of an organization name'
+        maxLength: 35
+      organizationNameAddOn2:
+        type: string
+        description: 'Addon2 of an organization name'
+        maxLength: 35
+      legalForm:
+        $ref: 'LegalForm'
+        description: 'Legal form of the company'
+      state:
+        $ref: 'PersonState'
+        description: 'Indicates state of a validated person'
+      personAddressKey:
+        $ref: 'KeyWithConfidence'
+        description: 'Identifies a person at a domiclie address (AMP-Key)'
+    required:
+      - personType
+      - state
+      - personAddressKey
+    additionalProperties: false
+    description: 'Information related to the person of an address'
+  PersonalizedAddressState:
+    type: string
+    enum:
+      - PLANNED
+      - ACTIVE
+      - HISTORIC_ACTIVE
+      - NIXIE
+    description: "PLANNED  Planned but not yet deliverable\nACTIVE   Active and deliverable\nHISTORIC_ACTIVE  historic but active and deliverable\nNIXIE    different reasons (e.g. person or company doesen't exist anymore) - not deliverable"
+  PreannouncementCodingEvent:
+    type: object
+    properties:
+      eventId:
+        type: string
+        description: "Unique identifier of a preannouncement coding message\nPrimary key 🔑"
+        maxLength: 200
+      idTags:
+        $ref: 'IdentifierTags'
+        description: 'Contains a list of ids identifying the processing item.'
+      senderId:
+        type: string
+        description: 'Unique identifier of the sending entity. The business customer receives this ID when registering for DataTransfer.'
+        maxLength: 200
+      timestamp:
+        $ref: 'DateTime'
+        description: 'Time when the event is published'
+      codingResult:
+        $ref: 'CodingResult'
+        description: 'Validated preannouncement coding data'
+      valid:
+        type: boolean
+        description: "DEPRECATED: In future use the related keys to check if valid (personAddressKey or houseKey)\ntrue: The delivered preannouncement raw data is correct\nfalse: The Data is not correct (bad data delivery)"
+      corrected:
+        type: boolean
+        description: "DEPRECATED: In future use the applied coding rules for the related key to check if a coding rule is used to deliver the key\ntrue: corrections were applied to provide the validated coding result\nfalse: no correction needed to provide result or not valid at all"
+    required:
+      - eventId
+      - senderId
+      - timestamp
+      - codingResult
+      - valid
+      - corrected
+    additionalProperties: false
+    description: 'Coding event'
+  Product:
+    type: object
+    properties:
+      code:
+        type: string
+        description: 'Validated product code (e.g. 509)'
+      shortName:
+        type: string
+        description: 'Shortname of validated product (e.g. PRI)'
+    required:
+      - code
+    additionalProperties: false
+    description: 'Identified and validated product (old PRZL, "Zusatzleistung")'
