@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Coding System Development'
     email: erkennen.codieren.pakete@post.ch
-  version: 5.0.0-feature-refactoring.4
+  version: 5.0.0-feature-refactoring.5
 host: 'server:8080'
 basePath: Kafka
 paths:
@@ -326,6 +326,7 @@ definitions:
         description: 'Identifies a person at a domiclie address (AMP-Key)'
     required:
       - personType
+      - state
       - personAddressKey
     additionalProperties: false
     description: 'Information related to the person of an address'
@@ -356,7 +357,7 @@ definitions:
         description: 'Time when the event is published'
       codingResult:
         $ref: 'CodingResult'
-        description: "Data captured during a workflow in the coding system\nThis may contain aggregated data from multiple enrichment steps"
+        description: 'Validated preannouncement coding data'
       valid:
         type: boolean
         description: "DEPRECATED: In future use the related keys to check if valid (personAddressKey or houseKey)\ntrue: The delivered preannouncement raw data is correct\nfalse: The Data is not correct (bad data delivery)"
