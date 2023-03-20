@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Coding System Development'
     email: erkennen.codieren.pakete@post.ch
-  version: 6.0.0
+  version: 7.0.0-feature-applied-coding-rules.1
 host: 'server:8080'
 basePath: Kafka
 paths:
@@ -58,6 +58,11 @@ definitions:
         items:
           type: string
         description: 'Address lines (raw, unvalidated address data submitted by the customer)'
+      appliedCodingRules:
+        type: array
+        items:
+          type: string
+        description: 'Coding rules which were applied to resolve the address'
       state:
         $ref: 'PersonalizedAddressState'
         description: 'Indicates state of a validated person living at a specific address'
@@ -179,16 +184,6 @@ definitions:
       confidence:
         $ref: 'Int'
         description: 'Confidence of a key (based on validation with masterdata and coding rules)'
-      reasons:
-        type: array
-        items:
-          type: string
-        description: 'Reasons which indicate why the confidence has its value'
-      appliedCodingRules:
-        type: array
-        items:
-          type: string
-        description: 'Coding rules which were applied to resolve a specific key'
     required:
       - key
       - confidence
