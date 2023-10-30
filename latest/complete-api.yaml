@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Coding System Development'
     email: erkennen.codieren.pakete@post.ch
-  version: 7.1.0-Feature-update.2
+  version: 7.1.0-Feature-update.3
 host: 'server:8080'
 basePath: Kafka
 paths:
@@ -260,7 +260,7 @@ definitions:
         maxLength: 2
       addressPostcode6:
         type: string
-        description: "6 digit postcode\n(AMPplus: Postleitzahl 6-stellig)"
+        description: "6 digit postcode\n(AMPplus: Postleitzahl 6-stellig)\nPlease use the postCodeKey to resolve the postcode."
         maxLength: 6
       postCodeKey:
         $ref: 'KeyWithConfidence'
