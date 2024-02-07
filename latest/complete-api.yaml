@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Coding System Development'
     email: erkennen.codieren.pakete@post.ch
-  version: 7.1.0
+  version: 7.2.0-Feature-legacyStreetKey.3
 host: 'server:8080'
 basePath: Kafka
 paths:
@@ -246,6 +246,9 @@ definitions:
       streetKey:
         $ref: 'KeyWithConfidence'
         description: 'Identifies the street physically located on the mailpiece (street key in AMPplus)'
+      legacyStreetKey:
+        $ref: 'KeyWithConfidence'
+        description: "Identifies the street physically located on the mailpiece (legacy street key form ZUBOFI)\nWill be removed as soon as the rollout of the new software is done for all centers."
       city:
         type: string
         description: "City\n(AMPplus: Ort)"
