@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Coding System Development'
     email: erkennen.codieren.pakete@post.ch
-  version: 7.2.0
+  version: 7.3.0-feature-legalform.2
 host: 'server:8080'
 basePath: Kafka
 paths:
@@ -218,7 +218,9 @@ definitions:
       - ASSOCIATION
       - FOUNDATION
       - BRANCH_OF_FOREIGN_AG_LTD
+      - PUBLIC_LIMITED_FOREIGN_COMPANY
       - BRANCH_OF_FOREIGN_SARL
+      - PRIVATE_LIMITED_FOREIGN_COMPANY
       - FEDERAL_ADMINISTRATION
       - CANTONAL_ADMINISTRATION
       - DISTRICT_ADMINISTRATION
@@ -227,7 +229,7 @@ definitions:
       - STATE_RECOGNIZED_CHURCH
       - FOREIGN_LEGAL_FORM_BRANCH
       - FOREIGN_COUNTRY_EMBASSY
-      - INERNATIONAL_ORGANIZATION
+      - INTERNATIONAL_ORGANIZATION
       - FEDERAL_WORKS
       - CANTONAL_WORKS
       - DISTRICT_WORKS
@@ -235,7 +237,7 @@ definitions:
       - PUBLIC_ENTITY_WORKS
       - POSTAL_ORGANIZATIONAL_UNITS
       - SUBSIDIARIES
-    description: "Rechtsform, wird nur bei Geschäftspersonen abgefüllt\nINDIVIDUAL = Einzelfirma\nSIMPLE_PARTNERSHIP = Einfache Gesellschaft\nGENERAL_PARTNERSHIP = Kollektivgesellschaft\nLIMITED_PARTNERSHIP = Kommanditgesellschaft\nPARTNERSHIP_LIMITED_BY_SHARES = Kommanditaktiengesellschaft\nPUBLIC_LIMITED_COMPANY = Aktiengesellschaft/LTD\nPRIVATE_LIMITED_COMPANY = GMBH/SARL\nCOOPERATIVE = Genossenschaft\nASSOCIATION = Verein\nFOUNDATION = Stiftung\nBRANCH_OF_FOREIGN_AG_LTD = Ausländische AG-Filiale\nBRANCH_OF_FOREIGN_SARL = Ausländische GMBH-Filiale;SARL\nFEDERAL_ADMINISTRATION = Verwaltung des Bundes\nCANTONAL_ADMINISTRATION = Verwaltung des Kantons\nDISTRICT_ADMINISTRATION = Verwaltung des Bezirks\nMUNICIPAL_ADMINISTRATION = Verwaltung der Gemeinde\nPUBLIC_ENTITY_ADMINISTRATION = öffentliche Körperschaft (Verw.)\nSTATE_RECOGNIZED_CHURCH = Staatlich anerkannte Kirche\nFOREIGN_LEGAL_FORM_BRANCH = Ausländische Rechtsform (Filiale)\nFOREIGN_COUNTRY_EMBASSY = Ausländischer Staat (Botschaft)\nINERNATIONAL_ORGANIZATION = Internationale Organisation\nFEDERAL_WORKS = Betriebe des Bundes\nCANTONAL_WORKS = Betriebe des Kantons\nDISTRICT_WORKS = Betriebe des Bezirks\nMUNICIPAL_WORKS = Betriebe der Gemeinde\nPUBLIC_ENTITY_WORKS = öffentliche Körperschaft (Betriebe)\nPOSTAL_ORGANIZATIONAL_UNITS = Organisaitonseinheit der Post\nSUBSIDIARIES = Konzerngesellschaft der Post"
+    description: "Rechtsform, wird nur bei Geschäftspersonen abgefüllt\nINDIVIDUAL = Einzelfirma\nSIMPLE_PARTNERSHIP = Einfache Gesellschaft\nGENERAL_PARTNERSHIP = Kollektivgesellschaft\nLIMITED_PARTNERSHIP = Kommanditgesellschaft\nPARTNERSHIP_LIMITED_BY_SHARES = Kommanditaktiengesellschaft\nPUBLIC_LIMITED_COMPANY = Aktiengesellschaft/LTD\nPRIVATE_LIMITED_COMPANY = GMBH/SARL\nCOOPERATIVE = Genossenschaft\nASSOCIATION = Verein\nFOUNDATION = Stiftung\nBRANCH_OF_FOREIGN_AG_LTD = (DEPRECATED, will be replaced by PUBLIC_LIMITED_FOREIGN_COMPANY)\nPUBLIC_LIMITED_FOREIGN_COMPANY = (replaces BRANCH_OF_FOREIGN_AG_LTD soon)\nBRANCH_OF_FOREIGN_SARL = Ausländische GMBH-Filiale;SARL (DEPRECATED, will be replaced by PRIVATE_LIMITED_FOREIGN_COMPANY)\nPRIVATE_LIMITED_FOREIGN_COMPANY = Ausländische GMBH-Filiale;SARL (replaces BRANCH_OF_FOREIGN_SARL soon)\nFEDERAL_ADMINISTRATION = Verwaltung des Bundes\nCANTONAL_ADMINISTRATION = Verwaltung des Kantons\nDISTRICT_ADMINISTRATION = Verwaltung des Bezirks\nMUNICIPAL_ADMINISTRATION = Verwaltung der Gemeinde\nPUBLIC_ENTITY_ADMINISTRATION = öffentliche Körperschaft (Verw.)\nSTATE_RECOGNIZED_CHURCH = Staatlich anerkannte Kirche\nFOREIGN_LEGAL_FORM_BRANCH = Ausländische Rechtsform (Filiale)\nFOREIGN_COUNTRY_EMBASSY = Ausländischer Staat (Botschaft)\nINTERNATIONAL_ORGANIZATION = Internationale Organisation\nFEDERAL_WORKS = Betriebe des Bundes\nCANTONAL_WORKS = Betriebe des Kantons\nDISTRICT_WORKS = Betriebe des Bezirks\nMUNICIPAL_WORKS = Betriebe der Gemeinde\nPUBLIC_ENTITY_WORKS = öffentliche Körperschaft (Betriebe)\nPOSTAL_ORGANIZATIONAL_UNITS = Organisationseinheit der Post\nSUBSIDIARIES = Konzerngesellschaft der Post"
   Locality:
     type: object
     properties:
