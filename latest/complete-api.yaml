@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Coding System Development'
     email: erkennen.codieren.pakete@post.ch
-  version: 7.2.0
+  version: 7.3.0-feature-coding-reason-new.1
 host: 'server:8080'
 basePath: Kafka
 paths:
@@ -77,7 +77,10 @@ definitions:
       - CORRECTED_POSTCODE
       - CORRECTED_CITY
       - ADDED_CITY_ELEMENTS
-    description: "CORRECTED_STREET = Streetname was corrected due to the address in master data and due to other validated elements in the address.\nCORRECTED_HOUSE_NUMBER = House no. was not found in the master data and was corrected.\nNO_HOUSE_NUMBER = Missing house no. or house no. suffix was corrected due to the address in master data and due to other validated elements in the address.\nCORRECTED_POSTCODE = Postcode was corrected due to the address in master data and due to other validated elements in the address.\nCORRECTED_CITY = City was corrected due to the address in master data and due to other validated elements in the address.\nADDED_CITY_ELEMENTS = City was corrected due to the address in master data and due to other validated elements in the address and was adjusted with further elements (E.g. Yverdon --> Yverdon-les-Bains)."
+      - CO_ADDRESS
+      - NO_RECIPIENT_IN_MASTER_DATA
+      - AMBIGUOUS_ADDRESSED_RECIPIENT
+    description: "CORRECTED_STREET = Streetname was corrected due to the address in master data and due to other validated elements in the address.\nCORRECTED_HOUSE_NUMBER = House no. was not found in the master data and was corrected.\nNO_HOUSE_NUMBER = Missing house no. or house no. suffix was corrected due to the address in master data and due to other validated elements in the address.\nCORRECTED_POSTCODE = Postcode was corrected due to the address in master data and due to other validated elements in the address.\nCORRECTED_CITY = City was corrected due to the address in master data and due to other validated elements in the address.\nCO_ADDRESS = A C/O-address was found on the in the preannouncement data.\nNO_RECIPIENT_IN_MASTER_DATA = The Recipient in the preannounced data was not found in the master data.\nAMBIGUOUS_ADDRESSED_RECIPIENT = Multiple Recipients in the preannounced data were found.\nADDED_CITY_ELEMENTS = City was corrected due to the address in master data and due to other validated elements in the address and was adjusted with further elements (E.g. Yverdon --> Yverdon-les-Bains)."
   DateTime:
     type: string
     description: "<a href=\"https://swagger.io/docs/specification/data-models/data-types/#string\">String @format date-time</a>,\nas defined by <a href=\"https://tools.ietf.org/html/rfc3339#section-5.6\">RFC 3339, section 5.6</a>,\nfor example: <code>2014-05-22T10:42:42.542+00:00</code>."
