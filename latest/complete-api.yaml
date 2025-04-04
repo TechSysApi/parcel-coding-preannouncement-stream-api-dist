@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Coding System Development'
     email: erkennen.codieren.pakete@post.ch
-  version: 7.5.0
+  version: 7.6.0-feature-data-provider.1
 host: 'server:8080'
 basePath: Kafka
 paths:
@@ -117,6 +117,12 @@ definitions:
         description: 'Coding reasons that may happen during preannouncement process.'
     additionalProperties: false
     description: 'Information captured by the coding systems during coding'
+  DataProvider:
+    type: string
+    enum:
+      - DATA_EXCHANGE_NATIONAL
+      - DATA_EXCHANGE_INTERNATIONAL
+    description: "DATA_EXCHANGE_NATIONAL = Data provided by national data exchange (e.g. DataTransfer or DXS)\nDATA_EXCHANGE_INTERNATIONAL = Data provided by international data exchange (e.g. NES-ECOM or NES-UPU)"
   DeliveryPointState:
     type: string
     enum:
@@ -373,6 +379,9 @@ definitions:
         type: string
         description: 'Unique identifier of the sending entity. The business customer receives this ID when registering for DataTransfer.'
         maxLength: 200
+      dataProvider:
+        $ref: 'DataProvider'
+        description: 'Provider or data'
       timestamp:
         $ref: 'DateTime'
         description: 'Time when the event is published'
