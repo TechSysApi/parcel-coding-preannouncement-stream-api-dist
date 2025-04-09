@@ -13,3 +13,4 @@
 - [v7.4.0](https://TechSysApi.github.io/parcel-coding-preannouncement-stream-api-dist/v7.4.0/ui/?url=../complete-api.yaml)
 - [v7.4.1](https://TechSysApi.github.io/parcel-coding-preannouncement-stream-api-dist/v7.4.1/ui/?url=../complete-api.yaml)
 - [v7.5.0](https://TechSysApi.github.io/parcel-coding-preannouncement-stream-api-dist/v7.5.0/ui/?url=../complete-api.yaml)
+- [v7.6.0](https://TechSysApi.github.io/parcel-coding-preannouncement-stream-api-dist/v7.6.0/ui/?url=../complete-api.yaml)
